@@ -9,6 +9,7 @@ import { Responsiveness } from './responsiveness';
 import { Metric } from './metric';
 import { check_api_limit } from './api_limit';
 import { stat } from 'fs';
+import { Depend_Score } from './dependRate';
 
 require('dotenv').config();
 
@@ -30,6 +31,7 @@ export async function evaluate_URL(url: string) {
       "BUS_FACTOR_SCORE": -1,
       "RESPONSIVE_MAINTAINER_SCORE": -1,
       "LICENSE_SCORE": -1,
+      "DEPENDENCY_SCORE": -1,
     };
 
     let bus = new Bus(url);
@@ -47,6 +49,9 @@ export async function evaluate_URL(url: string) {
     let responsiveness = new Responsiveness(url);
     await responsiveness.getGitHubRepoUrl(url);
 
+    let depend = new Depend_Score(url);
+    await depend.getGitHubRepoUrl(url);
+
     let metric = new Metric(url,"test-clone");
     await metric.getGitHubRepoUrl(url);
 
@@ -60,6 +65,7 @@ export async function evaluate_URL(url: string) {
     metrics["BUS_FACTOR_SCORE"] = await bus.Bus_Factor(url);
     metrics["RAMP_UP_SCORE"] = await rampup.rampup();
     metrics["CORRECTNESS_SCORE"] = await correctness.getMetric();
+    metrics["DEPENDENCY_SCORE"] = await depend.calculateDependScore();
     metrics["NET_SCORE"] = await net_score(metrics);
     await metric.deleteRepository();
 
@@ -75,6 +81,7 @@ export async function evaluate_URL(url: string) {
       "BUS_FACTOR_SCORE": -1,
       "RESPONSIVE_MAINTAINER_SCORE": -1,
       "LICENSE_SCORE": -1,
+      "DEPENDENCY_SCORE": -1,
     };
   }
 }
