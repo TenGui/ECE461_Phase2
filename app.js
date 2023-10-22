@@ -1,10 +1,10 @@
-import express from 'express';
-const app = express();
-const port = 3000;
+import express from 'express'
+const app = express()
+const port = 3000
 
 app.get('/', (req, res) => {
-  res.send('<h1>Express Demo App</h1> <h4>Message: Success <p>Version: 1.0.0</p>');
-});
+  res.send('<h1>Express Demo App</h1> <h4>Message: Success <p>Version: 1.0.0</p>')
+})
 
 app.get('/products', (req, res) => {
   res.send([
@@ -17,8 +17,8 @@ app.get('/products', (req, res) => {
       price: 200
     }
   ])
-});
+})
 
 app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
-});
+  console.log(`Example app listening at http://localhost:${port}`)
+})
