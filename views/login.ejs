@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login Page</title>
+</head>
+<body>
+    <div>
+        <h2>Login</h2>
+        <h3><%= payload.errorMessage %></h3>
+        <form action="/login" method="post">
+            <div>
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required value="ece30861defaultadminuser">
+            </div>
+            <div>
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required value='correcthorsebatterystaple123(!__+@**(A;DROP TABLE packages'>
+            </div>
+            <div>
+                <input type="submit" value="Login">
+            </div>
+        </form>
+    </div>
+</body>
+</html>

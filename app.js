@@ -1,23 +1,35 @@
 const express = require('express');
 const app = express();
+const path = require('path');
+const session = require('express-session');
+const middleware = require('./middleware');
+const bodyParser = require('body-parser');
 const port = 3000;
+app.use(session({
+  secret: '_ECE461_Phase2_*',
+  resave: true,
+  saveUninitialized: false
+}))
 
-app.get('/', (req, res) => {
-  res.send('<h1>Express Demo App</h1> <h4>Message: Success <p>Version: 1.0.0</p>');
+const loginRoutes = require('./routes/loginRoutes');
+const authRoutes = require('./routes/authRoutes');
+app.set('view engine', 'ejs')
+app.set('views', 'views')
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(express.static(path.join(__dirname, 'public')))
+
+app.use('/login', loginRoutes);
+app.use('/authenticate', authRoutes);
+
+app.get('/', middleware.requireLogin, (req, res) => {
+  const payload = {
+    userLoggedIn: req.session.user,
+    pageTitle: 'Home'
+  }
+  res.status(200).render('home', { payload: payload })
 });
 
-app.get('/products', (req, res) => {
-  res.send([
-    {
-      productId: '101',
-      price: 100
-    },
-    {
-      productId: '102',
-      price: 200
-    }
-  ])
-});
+
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
