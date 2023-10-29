@@ -1,3 +1,7 @@
+import { createConnection } from 'typeorm';
+import uploadRoute from './routes/uploadRoute';
+import updateRoute from './routes/updateRoute';
+
 const express = require('express');
 const app = express();
 const port = 2000;
