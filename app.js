@@ -23,6 +23,12 @@ app.get('/products', (req, res) => {
   ])
 });
 
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
+app.use(express.json());
+app.use(uploadRoute);
+app.use(updateRoute);
+
+createConnection().then(() => {
+  app.listen(port, () => {
+    console.log(`Example app listening at http://localhost:${port}`);
+  });
 });
