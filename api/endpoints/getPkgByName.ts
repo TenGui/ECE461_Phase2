@@ -22,7 +22,7 @@ async function getPkgByName(req: Request, res: Response) {
       }
     } catch (error) {
       // Handle any potential errors during the database query.
-        console.error("Error fetching packages by regex: ", error);
+        console.log("Error fetching packages by regex: ", error);
         return res.sendStatus(500);
     }
     try {
@@ -56,7 +56,7 @@ async function getPkgByName(req: Request, res: Response) {
   return res.status(200).json(response);
     } catch (error) {
       // Handle any potential errors during the database query.
-        console.error("Error fetching packages history by name: ", error);
+        console.log("Error fetching packages history by name: ", error);
         return res.sendStatus(500);
     }
 }
