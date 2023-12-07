@@ -42,7 +42,7 @@ async function ratePkgById(req: Request, res: Response) {
 async function runTsc(): Promise<string> {
     return new Promise((resolve, reject) => {
       const rootPath = path.join(__dirname, '..', '..');
-      const command = 'tsc && node ./dist/src/main.js ./api/one-url.txt';
+      const command = 'node ./dist/src/main.js ./api/one-url.txt';
   
       exec(command, { cwd: rootPath }, (error, stdout, stderr) => {
         if (error) {

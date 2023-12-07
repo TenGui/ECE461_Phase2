@@ -1,1 +1,1 @@
-https://github.com/debug-js/debug.git
+https://github.com/jashkenas/underscore.git
