@@ -2,7 +2,7 @@
     "apps": [
       {
         "name": "461Server",
-        "script": "./server.js",
+        "script": ".api/server.js",
         "instances": 1,
         "exec_mode": "cluster",
         "autorestart": true,
@@ -10,4 +10,4 @@
         "max_memory_restart": "1G"
       }
     ]
-  }
+}
