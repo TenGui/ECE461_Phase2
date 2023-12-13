@@ -15,7 +15,7 @@ async function getPkgByName(req: Request, res: Response) {
         encoded = await verifyToken(token);
     } catch (error) {
       console.error("Error verifying token: ", error);
-      return res.status(400).send("Unauthorized");
+      return res.sendStatus(400);
     }
     try {
       const result = await query("SELECT * FROM packages WHERE package_name = $1", [name]);
