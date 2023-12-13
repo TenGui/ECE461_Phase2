@@ -22,7 +22,13 @@ async function getPackageByRegEx(req: Request, res: Response) {
         return res.sendStatus(400);
     }
     const payload: any = []
-    const result = await query('SELECT package_name, package_version FROM packages WHERE package_name ~ $1 OR package_readme ~ $2', [regex, regex]);
+    let result = null;
+    try {
+        result = await query('SELECT package_name, package_version FROM packages WHERE package_name ~ $1 OR package_readme ~ $2', [regex, regex]);
+    } catch (err) {
+        console.log(err);
+        return res.sendStatus(500);
+    }
     if (result.rowCount === 0) {
         return res.sendStatus(404);
     }
