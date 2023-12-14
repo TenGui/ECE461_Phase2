@@ -44,7 +44,6 @@ async function updatePkgById(req: Request, res: Response) {
     const pkg_name = metadata.Name
     const pkg_version = metadata.Version
     const pkg_id = metadata.ID
-    if (req.params.id !== pkg_id) return res.sendStatus(400)
     const pkg = await query('SELECT * FROM packages WHERE package_id = $1 AND package_name = $2 AND package_version = $3', [pkg_id, pkg_name, pkg_version])
     if (pkg.rowCount && pkg.rowCount === 0) return res.sendStatus(404)
     if (data.Content) {

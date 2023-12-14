@@ -27,11 +27,22 @@ async function ratePkgById(req: Request, res: Response) {
     try {
         result = await runTsc();
         console.log(result);
-        const { URL, ...trimmedResult } = JSON.parse(result.trim());
+        const score = JSON.parse(result.trim());
         //get rid of the URL in the result
         const username = defaultUsername;      
         const hisInsert = await query('INSERT INTO packageHistory (package_name, user_name, user_action, package_id) VALUES($1, $2, $3, $4)', [pkg.rows[0].package_name, username, 'RATE', id]);
-        return res.status(200).json(trimmedResult);
+        console.log(score)
+        const payload = {
+          "BusFactor": score.BUS_FACTOR_SCORE,
+          "Correctness": score.CORRECTNESS_SCORE,
+          "RampUp": score.RAMP_UP_SCORE,
+          "ResponsiveMaintainer": score.RESPONSIVE_MAINTAINER_SCORE,
+          "LicenseScore": score.LICENSE_SCORE,
+          "GoodPinningPractice": score.Depend_Score,
+          "PullRequest": score.PR_STATS,
+          "NetScore": score.NET_SCORE,
+        }
+        return res.status(200).json(payload);
     } catch (error) {
         console.error("Error rating package by ID: ", error)
         return res.sendStatus(500)
