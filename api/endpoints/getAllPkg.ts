@@ -1,6 +1,5 @@
 import express, { Request, Response } from "express";
 import { query } from "../database";
-import jwt from "jsonwebtoken";
 
 const PER_PAGE = 10;
 const RegEx_Exact = /^\d+\.\d+\.\d+$/;
@@ -48,22 +47,26 @@ async function packages(req: Request<IPackagesRequest>, res: Response) {
     const xauth = req.headers["X-Authorization"];
     const { offset } = req.query;
     const packagerequests: IPackageInfo[] = req.body;
-    console.log("OFFSET: ", offset);
-    console.log("PACKAGES: ", packagerequests);
     //if not auth, auth missing, return 400
     //if too long, return 413
+    if (
+      packagerequests.some((pkg: IPackageInfo) => !pkg.Name || !pkg.Version)
+    ) {
+      res.status(400).send();
+      return;
+    }
     if (packagerequests.some((pkg: IPackageInfo) => pkg.Name === "*")) {
       const result = await query(
         "SELECT package_id, package_version, package_name FROM packages LIMIT $1 OFFSET $2;",
         [PER_PAGE, Number(offset) * PER_PAGE]
       );
-      res.status(200).json(result.rows);
+      res.status(200).json(result.rows).send();
       return;
     }
     const strlist = packagerequests.map((pkg: IPackageInfo) => {
       const cmpstr = compareQueryStr(pkg.Version);
       if (cmpstr === "") {
-        res.sendStatus(400);
+        res.status(400).send();
         return;
       }
       return `(package_name = '${pkg.Name}' AND ${cmpstr})`;
@@ -71,9 +74,9 @@ async function packages(req: Request<IPackagesRequest>, res: Response) {
     const querystr = `SELECT package_id, package_version, package_name FROM packages WHERE ${strlist.join(
       " OR "
     )};`;
-    console.log("QUERYSTR: ", querystr);
-
-    return res.sendStatus(200);
+    const result = await query(querystr);
+    res.status(200).json(result.rows);
+    return;
   } catch (err) {
     console.log(err);
     return res.sendStatus(500);
