@@ -12,7 +12,7 @@ export async function ResetRegistry(req: Request, res: Response) {
       decoded = await verifyToken(token);
   } catch (err) {
       console.log(err)
-      return res.sendStatus(400);
+      return res.sendStatus(401);
   }
   try {
     const username = (decoded as any)[1].username;

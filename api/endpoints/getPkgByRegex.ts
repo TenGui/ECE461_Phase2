@@ -33,13 +33,7 @@ async function getPackageByRegEx(req: Request, res: Response) {
         return res.sendStatus(404);
     }
     console.log(result.rows);
-    result.rows.forEach((row) => {
-        payload.push({
-            "Version": row.package_version,
-            "Name": row.package_name
-        })
-    })
-    return res.status(200).json(payload);
+    return res.status(200).json(result.rows);
 }
   
 export default getPackageByRegEx;
