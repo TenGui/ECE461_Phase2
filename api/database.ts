@@ -1,11 +1,11 @@
 import { Pool } from "pg";
 import fs from "fs";
 const pool = new Pool({
-  host: "db1.cxbpqyp9rkhq.us-east-2.rds.amazonaws.com",
+  host: "database-1.czbaseadhhdu.us-east-1.rds.amazonaws.com",
   port: 5432,
-  database: "ece461test",
-  user: "postgres",
-  password: "dreamteam",
+  database: "Phase2db",
+  user: "davidasousa",
+  password: "SandalGum17#",
   ssl: {
     ca: fs.readFileSync(__dirname + "/us-east-2-bundle.pem"),
   },
