@@ -66,6 +66,12 @@ async function packages(req: Request<IPackagesRequest>, res: Response) {
           Name: row.package_name,
         };
       });
+      const moreresult = await query(
+        "SELECT package_id, package_version, package_name FROM packages LIMIT $1 OFFSET $2;",
+        [PER_PAGE + 1, defaultoffset * PER_PAGE]
+      );
+      const hasMore = result.rows.length > PER_PAGE;
+      res.header('offset', hasMore ? (Number(offset) + 1).toString() : '-1');
       res.status(200).json(rows).send();
       return;
     }
@@ -88,6 +94,16 @@ async function packages(req: Request<IPackagesRequest>, res: Response) {
         Name: row.package_name,
       };
     });
+
+    let hasMore = false;
+    // Fetch one more record than needed to check if there are more entries
+    const additionalResult = await query(
+        `SELECT 1 FROM packages WHERE ${strlist.join(" OR ")} LIMIT 1 OFFSET ${(Number(offset) || 0) * PER_PAGE + PER_PAGE}`
+    );
+    if (additionalResult.rows.length > 0) {
+        hasMore = true;
+    }
+    res.header('offset', offset ? (Number(offset) + 1).toString() : '-1');
     res.status(200).json(rows);
     return;
   } catch (err) {
