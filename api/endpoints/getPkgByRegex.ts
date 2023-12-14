@@ -19,7 +19,7 @@ async function getPackageByRegEx(req: Request, res: Response) {
     const isSafe = safe(regex);
     if(!isSafe) {
         console.log("Regex is not safe");
-        return res.sendStatus(400);
+        return res.sendStatus(404);
     }
     const payload: any = []
     let result = null;
