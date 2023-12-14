@@ -376,13 +376,13 @@ async function getLatestReleaseUrl(url: string): Promise<any> {
 
 function getPayload(pkgInfo: any, jsprogram: string) : any {
   return {
-    metadata: {
-      Name: pkgInfo.name,
-      Version: pkgInfo.version,
-      ID: pkgInfo.id,
+    "metadata": {
+      "Name": pkgInfo.name,
+      "Version": pkgInfo.version,
+      "ID": pkgInfo.id,
     },
-    data: {
-      JSProgram: jsprogram,
+    "data": {
+      "Content": ""
     }
   }
 }
