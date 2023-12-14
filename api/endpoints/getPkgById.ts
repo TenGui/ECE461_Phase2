@@ -5,7 +5,6 @@ const defaultUsername = 'ece30861defaultadminuser';
 async function packageById(req: Request, res: Response) {
     const token = req.headers['x-authorization'] as string;
     const packageId = req.params.id;
-    if (packageId == '-1') return res.sendStatus(400);
     if (!packageId) return res.sendStatus(400);
     let decoded = null
     // // Verify the JWT.
