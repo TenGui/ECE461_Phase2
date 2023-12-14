@@ -58,9 +58,16 @@ async function packages(req: Request<IPackagesRequest>, res: Response) {
     if (packagerequests.some((pkg: IPackageInfo) => pkg.Name === "*")) {
       const result = await query(
         "SELECT package_id, package_version, package_name FROM packages LIMIT $1 OFFSET $2;",
-        [PER_PAGE, Number(offset) * PER_PAGE]
+        [PER_PAGE, (Number(offset) - 1) * PER_PAGE]
       );
-      res.status(200).json(result.rows).send();
+      const rows = result.rows.map((row) => {
+        return {
+          ID: row.package_id,
+          Version: row.package_version,
+          Name: row.package_name,
+        };
+      });
+      res.status(200).json(rows).send();
       return;
     }
     const strlist = packagerequests.map((pkg: IPackageInfo) => {
@@ -75,7 +82,14 @@ async function packages(req: Request<IPackagesRequest>, res: Response) {
       " OR "
     )};`;
     const result = await query(querystr);
-    res.status(200).json(result.rows);
+    const rows = result.rows.map((row) => {
+      return {
+        ID: row.package_id,
+        Version: row.package_version,
+        Name: row.package_name,
+      };
+    });
+    res.status(200).json(rows);
     return;
   } catch (err) {
     console.log(err);
