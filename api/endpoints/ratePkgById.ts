@@ -4,6 +4,7 @@ import { verifyToken} from "../common";
 import { exec } from 'child_process';
 import path from 'path';
 import fs from "fs";
+import { json } from "body-parser";
 const defaultUsername = 'ece30861defaultadminuser';
 
 async function ratePkgById(req: Request, res: Response) {
@@ -31,7 +32,8 @@ async function ratePkgById(req: Request, res: Response) {
         //get rid of the URL in the result
         const username = defaultUsername;      
         const hisInsert = await query('INSERT INTO packageHistory (package_name, user_name, user_action, package_id) VALUES($1, $2, $3, $4)', [pkg.rows[0].package_name, username, 'RATE', id]);
-        return res.status(200).json(trimmedResult);
+        const json_response = JSON.stringify(trimmedResult);
+        return res.status(200).send(json_response);
     } catch (error) {
         console.error("Error rating package by ID: ", error)
         return res.sendStatus(500)

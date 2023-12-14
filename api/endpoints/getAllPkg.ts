@@ -66,7 +66,7 @@ async function packages(req: Request<IPackagesRequest>, res: Response) {
           Name: row.package_name,
         };
       });
-      res.status(200).json(rows).send();
+      res.status(200).json(rows);
       return;
     }
     const strlist = packagerequests.map((pkg: IPackageInfo) => {
@@ -88,6 +88,7 @@ async function packages(req: Request<IPackagesRequest>, res: Response) {
         Name: row.package_name,
       };
     });
+    res.set('offset', offset ? (Number(offset) + 1).toString() : '2')
     res.status(200).json(rows);
     return;
   } catch (err) {

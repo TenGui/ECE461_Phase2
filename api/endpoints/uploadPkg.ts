@@ -11,6 +11,7 @@ import {exec} from 'child_process';
 import { rimrafSync } from 'rimraf';
 const jsonminify = require('jsonminify')
 import dotenv from 'dotenv';
+import { json } from "body-parser";
 const dotenvPath = path.join(__dirname, '..','..', '.env');
 dotenv.config({ path: dotenvPath });
 const rootPath = path.join(__dirname, '..');
@@ -97,14 +98,16 @@ async function uploadPackage(req: Request, res: Response) {
       debloatCleanUp();
       const payload = getPayload(pkgInfo, jsprogram);
       payload.data.Content = encodezip.toString();
-      return res.status(201).json(payload);
+      const json_response = JSON.stringify(payload);
+      return res.status(201).json(json_response);
     } else {
       const pkgInsert = await query('INSERT INTO packages (package_id, package_version, package_name, package_url, jsprogram, package_zip, package_readme ) VALUES($1, $2, $3, $4, $5, $6, $7)', [pkgInfo.id, pkgInfo.version, pkgInfo.name, pkgInfo.url, jsprogram, buffer, readmeContent]);
       const hisInsert = await query('INSERT INTO packageHistory (package_name, user_name, user_action, package_id) VALUES($1, $2, $3, $4)', [pkgInfo.name, username, 'CREATE', pkgInfo.id]);
       cleanUp();
       const payload = getPayload(pkgInfo, jsprogram);
       payload.data.Content = request.Content;
-      return res.status(201).json(payload);
+      const json_response = JSON.stringify(payload);
+      return res.status(201).json(json_response);
     }
   } else if (request.URL) {
     if (request.URL.includes('npmjs.com')) {
@@ -257,14 +260,16 @@ async function uploadPackage(req: Request, res: Response) {
         debloatCleanUp();
         const payload = getPayload(pkgInfo, jsprogram);
         payload.data.Content = encodezip.toString();
-        return res.status(201).json(payload);
+        const json_response = JSON.stringify(payload);
+        return res.status(201).json(json_response);
       } else {
         const pkgInsert = await query('INSERT INTO packages (package_id, package_version, package_name, package_url, jsprogram, package_zip, package_readme) VALUES($1, $2, $3, $4, $5, $6, $7)', [pkgInfo.id, pkgInfo.version, pkgInfo.name, pkgInfo.url, jsprogram, zipdata.data, readmeContent]);
         const hisInsert = await query('INSERT INTO packageHistory (package_name, user_name, user_action, package_id) VALUES($1, $2, $3, $4)', [pkgInfo.name, username, 'CREATE', pkgInfo.id]);
         cleanUp();
         const payload = getPayload(pkgInfo, jsprogram);
         payload.data.Content = zipdata.data.toString('base64');
-        return res.status(201).json(payload);
+        const json_response = JSON.stringify(payload);
+        return res.status(201).json(json_response);
       }
     }
     //it is a github repo
@@ -335,14 +340,16 @@ async function uploadPackage(req: Request, res: Response) {
       debloatCleanUp();
       const payload = getPayload(pkgInfo, jsprogram);
       payload.data.Content = encodezip.toString();
-      res.status(201).json(payload);
+      const json_response = JSON.stringify(payload);
+      res.status(201).json(json_response);
     } else {
       const pkgInsert = await query('INSERT INTO packages (package_id, package_version, package_name, package_url, jsprogram, package_zip, package_readme ) VALUES($1, $2, $3, $4, $5, $6, $7 )', [pkgInfo.id, pkgInfo.version, pkgInfo.name, pkgInfo.url, jsprogram, bytea, readmeContent]);
       const hisInsert = await query('INSERT INTO packageHistory (package_name, user_name, user_action, package_id) VALUES($1, $2, $3, $4)', [pkgInfo.name, username, 'CREATE', pkgInfo.id]);
       cleanUp();
       const payload = getPayload(pkgInfo, jsprogram);
       payload.data.Content = bytea.toString('base64');
-      res.status(201).json(payload);
+      const json_response = JSON.stringify(payload);
+      res.status(201).json(json_response);
     }
     
   }

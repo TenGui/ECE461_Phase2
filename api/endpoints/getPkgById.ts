@@ -5,7 +5,6 @@ const defaultUsername = 'ece30861defaultadminuser';
 async function packageById(req: Request, res: Response) {
     const token = req.headers['x-authorization'] as string;
     const packageId = req.params.id;
-    if (packageId == '-1') return res.sendStatus(400);
     if (!packageId) return res.sendStatus(400);
     let decoded = null
     // // Verify the JWT.
@@ -39,7 +38,8 @@ async function packageById(req: Request, res: Response) {
       }
       // Send the package data as a JSON response.
       await query('INSERT INTO packageHistory (package_name, user_name, user_action, package_id) VALUES($1, $2, $3, $4)', [result.rows[0].package_name, defaultUsername, 'DOWNLOAD', result.rows[0].package_id])
-      return res.status(200).json(response);
+      const json_response = JSON.stringify(response);
+      return res.status(200).send(json_response);
     } catch (error) {
       // Handle any potential errors during the database query.
       console.error("Error fetching package by ID: ", error);
