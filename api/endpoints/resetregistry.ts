@@ -18,7 +18,7 @@ export async function ResetRegistry(req: Request, res: Response) {
     const username = (decoded as any)[1].username;
     if (username !== defaultUsername) {
       console.log("Incorrect username")
-      return res.sendStatus(400);
+      return res.sendStatus(401);
     }
     await query("DELETE FROM packagehistory;")
     await query("DELETE FROM packages;");
