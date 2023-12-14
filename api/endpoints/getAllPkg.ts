@@ -50,8 +50,7 @@ async function packages(req: Request<IPackagesRequest>, res: Response) {
     //if not auth, auth missing, return 400
     //if too long, return 413
     if (packagerequests.some((pkg: IPackageInfo) => !pkg.Name)) {
-      res.status(400).send();
-      return;
+      return res.status(400).send("name missing");
     }
     if (packagerequests.some((pkg: IPackageInfo) => pkg.Name === "*")) {
       const defaultoffset = offset ? Number(offset) - 1 : 1;
@@ -61,9 +60,9 @@ async function packages(req: Request<IPackagesRequest>, res: Response) {
       );
       const rows = result.rows.map((row) => {
         return {
-          ID: row.package_id,
-          Version: row.package_version,
-          Name: row.package_name,
+          "ID": row.package_id,
+          "Version": row.package_version,
+          "Name": row.package_name,
         };
       });
       const moreresult = await query(
@@ -71,8 +70,8 @@ async function packages(req: Request<IPackagesRequest>, res: Response) {
         [PER_PAGE + 1, defaultoffset * PER_PAGE]
       );
       const hasMore = result.rows.length > PER_PAGE;
-      res.header('offset', hasMore ? (Number(offset) + 1).toString() : '-1');
-      res.status(200).json(rows).send();
+      res.set('offset', hasMore ? (Number(offset) + 1).toString() : '-1');
+      res.status(200).send(rows);
       return;
     }
     const strlist = packagerequests.map((pkg: IPackageInfo) => {
@@ -89,9 +88,9 @@ async function packages(req: Request<IPackagesRequest>, res: Response) {
     const result = await query(querystr);
     const rows = result.rows.map((row) => {
       return {
-        ID: row.package_id,
-        Version: row.package_version,
-        Name: row.package_name,
+        "ID": row.package_id,
+        "Version": row.package_version,
+        "Name": row.package_name,
       };
     });
 
@@ -103,9 +102,8 @@ async function packages(req: Request<IPackagesRequest>, res: Response) {
     if (additionalResult.rows.length > 0) {
         hasMore = true;
     }
-    res.header('offset', offset ? (Number(offset) + 1).toString() : '-1');
-    res.status(200).json(rows);
-    return;
+    res.set('offset', offset ? (Number(offset) + 1).toString() : '-1');
+    return res.status(200).send(rows);
   } catch (err) {
     console.log(err);
     return res.sendStatus(500);
