@@ -18,14 +18,14 @@ async function authenticate(req: Request, res: Response) {
     console.log("Incorrect password")
     console.log("password: ", password)
     console.log("defaultPassword: ", defaultPassword)
-    return res.sendStatus(401);
+    return res.sendStatus(400);
   }
   const username = JSON.stringify(request.User.name);
   if (username !== defaultUsername) {
     console.log("Incorrect username")
     console.log("username: ", username)
     console.log("defaultUsername: ", defaultUsername)
-    return res.sendStatus(401);
+    return res.sendStatus(400);
   }
   const user_credential = {username: username, password: password};
   const token = jwt.sign(user_credential, tokenKey, { expiresIn: '10h' });
