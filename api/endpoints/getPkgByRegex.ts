@@ -24,7 +24,7 @@ async function getPackageByRegEx(req: Request, res: Response) {
     const payload: any = []
     let result = null;
     try {
-        result = await query('SELECT package_name, package_version FROM packages WHERE package_name ~ $1 OR package_readme ~ $2', [regex, regex]);
+        result = await query('SELECT package_name, package_version FROM packages WHERE package_name ~ $1 COLLATE "C" OR package_readme ~ $2 COLLATE "C"', [regex, regex]);
     } catch (err) {
         console.log(err);
         return res.sendStatus(500);
