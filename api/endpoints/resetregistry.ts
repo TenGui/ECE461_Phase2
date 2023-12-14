@@ -12,13 +12,13 @@ export async function ResetRegistry(req: Request, res: Response) {
       decoded = await verifyToken(token);
   } catch (err) {
       console.log(err)
-      return res.sendStatus(401);
+      return res.sendStatus(400);
   }
   try {
     const username = (decoded as any)[1].username;
     if (username !== defaultUsername) {
       console.log("Incorrect username")
-      return res.sendStatus(401);
+      return res.sendStatus(400);
     }
     await query("DELETE FROM packagehistory;")
     await query("DELETE FROM packages;");
