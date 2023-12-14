@@ -24,17 +24,16 @@ async function packageById(req: Request, res: Response) {
         return res.sendStatus(404);
       }
       const metadata = {
-        Name: result.rows[0].package_name,
-        Version: result.rows[0].package_version,
-        ID: result.rows[0].package_id,
+        "Name": result.rows[0].package_name,
+        "Version": result.rows[0].package_version,
+        "ID": result.rows[0].package_id,
       }
       const data = {
-        Content: result.rows[0].package_zip.toString('base64'),
-        JSProgram: result.rows[0].jsprogram,
+        "Content": result.rows[0].package_zip.toString('base64'),
       }
       const response = {
-        metadata: metadata,
-        data: data,
+        "metadata": metadata,
+        "data": data,
       }
       // Send the package data as a JSON response.
       await query('INSERT INTO packageHistory (package_name, user_name, user_action, package_id) VALUES($1, $2, $3, $4)', [result.rows[0].package_name, defaultUsername, 'DOWNLOAD', result.rows[0].package_id])
