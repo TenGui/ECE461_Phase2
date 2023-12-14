@@ -382,7 +382,8 @@ function getPayload(pkgInfo: any, jsprogram: string) : any {
       ID: pkgInfo.id
     },
     data: {
-      Content: ""
+      Content: null,
+      JSProgram: jsprogram
     }
   }
 }

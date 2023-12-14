@@ -32,13 +32,14 @@ async function getPackageByRegEx(req: Request, res: Response) {
     if (result.rowCount === 0) {
         return res.sendStatus(404);
     }
+    console.log(result.rows);
     result.rows.forEach((row) => {
         payload.push({
-            Version: row.package_version,
-            Name: row.package_name
+            "Version": row.package_version,
+            "Name": row.package_name
         })
     })
-    res.status(200).json(payload);
+    return res.status(200).json(payload);
 }
   
 export default getPackageByRegEx;
