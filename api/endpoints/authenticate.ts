@@ -1,3 +1,4 @@
+//handle 401 
 import { Request, Response } from "express";
 import { query } from "../database";
 import jwt from "jsonwebtoken";
@@ -18,7 +19,7 @@ async function authenticate(req: Request, res: Response) {
     console.log("Incorrect password")
     console.log("password: ", password)
     console.log("defaultPassword: ", defaultPassword)
-    return res.sendStatus(400);
+    return res.sendStatus(401);
   }
   const username = JSON.stringify(request.User.name);
   if (username !== defaultUsername) {

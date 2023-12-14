@@ -53,11 +53,12 @@ async function packages(req: Request<IPackagesRequest>, res: Response) {
       return res.status(400).send("name missing");
     }
     if (packagerequests.some((pkg: IPackageInfo) => pkg.Name === "*")) {
-      const defaultoffset = offset ? Number(offset) - 1 : 1;
+      const defaultoffset = offset ? Number(offset) - 1 : 0;
       const result = await query(
         "SELECT package_id, package_version, package_name FROM packages LIMIT $1 OFFSET $2;",
         [PER_PAGE, defaultoffset * PER_PAGE]
       );
+      console.log("packages:", result.rows);
       const rows = result.rows.map((row) => {
         return {
           "ID": row.package_id,

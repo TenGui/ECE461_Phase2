@@ -21,7 +21,7 @@ async function getPackageByRegEx(req: Request, res: Response) {
         console.log("Regex is not safe");
         return res.sendStatus(404);
     }
-    const payload: any = []
+    let payload: any = []
     let result = null;
     try {
         result = await query('SELECT package_name, package_version FROM packages WHERE package_name ~ $1 COLLATE "C" OR package_readme ~ $2 COLLATE "C"', [regex, regex]);
@@ -32,8 +32,14 @@ async function getPackageByRegEx(req: Request, res: Response) {
     if (result.rowCount === 0) {
         return res.sendStatus(404);
     }
-    console.log(result.rows);
-    return res.status(200).send(result.rows);
+    result.rows.forEach((row: any) => {
+        payload.push({
+            "Name": row.package_name,
+            "Version": row.package_version
+        })
+    })
+    console.log("payload: ", payload);
+    return res.status(200).send(payload);
 }
   
 export default getPackageByRegEx;
