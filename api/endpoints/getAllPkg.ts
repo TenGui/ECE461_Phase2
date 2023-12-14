@@ -49,16 +49,15 @@ async function packages(req: Request<IPackagesRequest>, res: Response) {
     const packagerequests: IPackageInfo[] = req.body;
     //if not auth, auth missing, return 400
     //if too long, return 413
-    if (
-      packagerequests.some((pkg: IPackageInfo) => !pkg.Name || !pkg.Version)
-    ) {
+    if (packagerequests.some((pkg: IPackageInfo) => !pkg.Name)) {
       res.status(400).send();
       return;
     }
     if (packagerequests.some((pkg: IPackageInfo) => pkg.Name === "*")) {
+      const defaultoffset = offset ? Number(offset) - 1 : 1;
       const result = await query(
         "SELECT package_id, package_version, package_name FROM packages LIMIT $1 OFFSET $2;",
-        [PER_PAGE, (Number(offset) - 1) * PER_PAGE]
+        [PER_PAGE, defaultoffset * PER_PAGE]
       );
       const rows = result.rows.map((row) => {
         return {
