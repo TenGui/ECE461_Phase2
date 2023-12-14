@@ -11,8 +11,12 @@ export async function ResetRegistry(req: Request, res: Response) {
   try {
       decoded = await verifyToken(token);
   } catch (err) {
-      console.log(err)
-      return res.sendStatus(401);
+    if (err instanceof jwt.JsonWebTokenError) {
+      return res.status(401).send('No authorization');
+    } else {
+      // Handle other errors
+      return res.status(400).send('Invalid');
+    }
   }
   try {
     const username = (decoded as any)[1].username;
@@ -22,7 +26,7 @@ export async function ResetRegistry(req: Request, res: Response) {
     }
     await query("DELETE FROM packagehistory;")
     await query("DELETE FROM packages;");
-    return res.sendStatus(200);
+    return res.status(200).send('Success');
   } catch (error) {
     console.error("Error resetting registry: ", error)
     return res.sendStatus(500)
