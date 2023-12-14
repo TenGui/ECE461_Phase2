@@ -8,7 +8,9 @@ const pool = new Pool({
     password: 'SandalGum17#',
     ssl: {
         ca: fs.readFileSync(__dirname + '/us-east-2-bundle.pem')
-    }
+    },
+    max: 20,
+    idleTimeoutMillis: 30000,
 })
 
 export async function query(text: string, values?: any[]) {
