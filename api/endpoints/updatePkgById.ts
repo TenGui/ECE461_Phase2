@@ -4,6 +4,7 @@ import { verifyToken } from "../common";
 import axios from "axios";
 import path from 'path';
 import dotenv from 'dotenv';
+import jwt from 'jsonwebtoken';
 const dotenvPath = path.join(__dirname, '..','..', '.env');
 dotenv.config({ path: dotenvPath });
 const defaultUsername = 'ece30861defaultadminuser';
@@ -13,8 +14,12 @@ async function updatePkgById(req: Request, res: Response) {
     try {
         decoded = await verifyToken(token);
     } catch (err) {
-        console.error(err);
-        return res.sendStatus(400);
+      if (err instanceof jwt.JsonWebTokenError) {
+        return res.status(401).send('No authorization');
+      } else {
+        // Handle other errors
+        return res.status(400).send('Invalid');
+      }
     }
     if (!req.body.metadata || !req.body.data) {
         console.error('Invalid request body metadata or data');
