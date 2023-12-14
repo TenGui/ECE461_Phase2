@@ -96,14 +96,14 @@ async function uploadPackage(req: Request, res: Response) {
       const hisInsert = await query('INSERT INTO packageHistory (package_name, user_name, user_action, package_id) VALUES($1, $2, $3, $4)', [pkgInfo.name, username, 'CREATE', pkgInfo.id]);
       debloatCleanUp();
       const payload = getPayload(pkgInfo, jsprogram);
-      payload.data.Content = encodezip.toString();
+      payload.data.Content = JSON.stringify(encodezip.toString());
       return res.status(201).json(payload);
     } else {
       const pkgInsert = await query('INSERT INTO packages (package_id, package_version, package_name, package_url, jsprogram, package_zip, package_readme ) VALUES($1, $2, $3, $4, $5, $6, $7)', [pkgInfo.id, pkgInfo.version, pkgInfo.name, pkgInfo.url, jsprogram, buffer, readmeContent]);
       const hisInsert = await query('INSERT INTO packageHistory (package_name, user_name, user_action, package_id) VALUES($1, $2, $3, $4)', [pkgInfo.name, username, 'CREATE', pkgInfo.id]);
       cleanUp();
       const payload = getPayload(pkgInfo, jsprogram);
-      payload.data.Content = request.Content;
+      payload.data.Content = JSON.stringify(request.Content);
       return res.status(201).json(payload);
     }
   } else if (request.URL) {
@@ -256,14 +256,14 @@ async function uploadPackage(req: Request, res: Response) {
         const hisInsert = await query('INSERT INTO packageHistory (package_name, user_name, user_action, package_id) VALUES($1, $2, $3, $4)', [pkgInfo.name, username, 'CREATE', pkgInfo.id]);
         debloatCleanUp();
         const payload = getPayload(pkgInfo, jsprogram);
-        payload.data.Content = encodezip.toString();
+        payload.data.Content = JSON.stringify(encodezip.toString());
         return res.status(201).json(payload);
       } else {
         const pkgInsert = await query('INSERT INTO packages (package_id, package_version, package_name, package_url, jsprogram, package_zip, package_readme) VALUES($1, $2, $3, $4, $5, $6, $7)', [pkgInfo.id, pkgInfo.version, pkgInfo.name, pkgInfo.url, jsprogram, zipdata.data, readmeContent]);
         const hisInsert = await query('INSERT INTO packageHistory (package_name, user_name, user_action, package_id) VALUES($1, $2, $3, $4)', [pkgInfo.name, username, 'CREATE', pkgInfo.id]);
         cleanUp();
         const payload = getPayload(pkgInfo, jsprogram);
-        payload.data.Content = zipdata.data.toString('base64');
+        payload.data.Content = JSON.stringify(zipdata.data.toString('base64'));
         return res.status(201).json(payload);
       }
     }
@@ -334,14 +334,14 @@ async function uploadPackage(req: Request, res: Response) {
       const hisInsert = await query('INSERT INTO packageHistory (package_name, user_name, user_action, package_id) VALUES($1, $2, $3, $4)', [pkgInfo.name, username, 'CREATE', pkgInfo.id]);
       debloatCleanUp();
       const payload = getPayload(pkgInfo, jsprogram);
-      payload.data.Content = encodezip.toString();
+      payload.data.Content = JSON.stringify(encodezip.toString());
       res.status(201).json(payload);
     } else {
       const pkgInsert = await query('INSERT INTO packages (package_id, package_version, package_name, package_url, jsprogram, package_zip, package_readme ) VALUES($1, $2, $3, $4, $5, $6, $7 )', [pkgInfo.id, pkgInfo.version, pkgInfo.name, pkgInfo.url, jsprogram, bytea, readmeContent]);
       const hisInsert = await query('INSERT INTO packageHistory (package_name, user_name, user_action, package_id) VALUES($1, $2, $3, $4)', [pkgInfo.name, username, 'CREATE', pkgInfo.id]);
       cleanUp();
       const payload = getPayload(pkgInfo, jsprogram);
-      payload.data.Content = bytea.toString('base64');
+      payload.data.Content = JSON.stringify(bytea.toString('base64'));
       res.status(201).json(payload);
     }
     
@@ -376,12 +376,12 @@ async function getLatestReleaseUrl(url: string): Promise<any> {
 
 function getPayload(pkgInfo: any, jsprogram: string) : any {
   return {
-    "metadata": {
-      "Name": pkgInfo.name,
-      "Version": pkgInfo.version,
-      "ID": pkgInfo.id,
+    metadata: {
+      "Name": JSON.stringify(pkgInfo.name),
+      "Version": JSON.stringify(pkgInfo.version),
+      "ID": JSON.stringify(pkgInfo.id),
     },
-    "data": {
+    data: {
       "Content": ""
     }
   }
