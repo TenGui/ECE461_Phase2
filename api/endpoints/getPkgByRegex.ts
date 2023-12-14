@@ -33,7 +33,7 @@ async function getPackageByRegEx(req: Request, res: Response) {
         return res.sendStatus(404);
     }
     console.log(result.rows);
-    return res.status(200).json(result.rows);
+    return res.status(200).send(result.rows);
 }
   
 export default getPackageByRegEx;
