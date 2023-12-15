@@ -68,13 +68,6 @@ async function uploadPackage(req: Request, res: Response) {
       console.error('Invalid github link, cannot get the latest release');
       return res.sendStatus(400);
     }
-    if (!pkgInfo.id) {
-      pkgInfo.id = getPackageId(pkgInfo.name, pkgInfo.version);
-    }
-    if (!pkgInfo.id) {
-      console.error('Invalid package name and version');
-      return res.sendStatus(400);
-    }
     //check if the package is already in the database
     const pkg = await query('SELECT * FROM Packages WHERE package_id = $1', [pkgInfo.id]);
     //return 409 if the package is already in the database
@@ -313,9 +306,6 @@ async function uploadPackage(req: Request, res: Response) {
     if (!pkgInfo.version) {
       console.error('Invalid github link, cannot get the latest release');
       return res.sendStatus(400);
-    }
-    if (!pkgInfo.id) {
-      pkgInfo.id = getPackageId(pkgInfo.name, pkgInfo.version);
     }
     const pkg = await query('SELECT * FROM packages WHERE package_id = $1', [pkgInfo.id]);
     if (pkg.rowCount && pkg.rowCount > 0) {

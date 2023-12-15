@@ -25,12 +25,12 @@ async function packageById(req: Request, res: Response) {
       }
       
       const response = {
-        metadata: {
+        "metadata": {
           "Name": result.rows[0].package_name,
           "Version": result.rows[0].package_version,
           "ID": packageId,
         },
-        data: {
+        "data": {
           "Content": Buffer.from(result.rows[0].package_zip).toString('base64')
         }
       }
