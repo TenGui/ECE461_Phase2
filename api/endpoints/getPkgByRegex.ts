@@ -35,7 +35,8 @@ async function getPackageByRegEx(req: Request, res: Response) {
     result.rows.forEach((row: any) => {
         payload.push({
             "Name": row.package_name,
-            "Version": row.package_version
+            "Version": row.package_version,
+            "ID": row.package_id
         })
     })
     console.log("payload: ", payload);
