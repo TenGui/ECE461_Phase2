@@ -31,12 +31,12 @@ async function packageById(req: Request, res: Response) {
           "ID": packageId,
         },
         data: {
-          "Content": Buffer.from(result.rows[0].package_content).toString('base64')
+          "Content": Buffer.from(result.rows[0].package_zip).toString('base64')
         }
       }
       // Send the package data as a JSON response.
       await query('INSERT INTO packageHistory (package_name, user_name, user_action, package_id) VALUES($1, $2, $3, $4)', [result.rows[0].package_name, defaultUsername, 'DOWNLOAD', result.rows[0].package_id])
-      return res.status(200).json(response);
+      return res.status(200).send(response);
     } catch (error) {
       // Handle any potential errors during the database query.
       console.error("Error fetching package by ID: ", error);
